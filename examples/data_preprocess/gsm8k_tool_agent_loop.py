@@ -67,6 +67,7 @@ if __name__ == "__main__":
                         "content": (
                             "You are a math expert. You are given a question and you need to solve it step by step. "
                             "Reasoning step by step before any tool call. "
+                            "You can use mcpsearch tool if you need other information."
                             "You should use the `calc_gsm8k_reward` tool after step by step solving the question, "
                             "before generate final answer at least once and refine your answer if necessary. "
                             "Put your final answer in the format of `#### <answer>`."
@@ -92,6 +93,7 @@ if __name__ == "__main__":
                             # "calc_reward_kwargs": {},
                             # "release_kwargs": {},
                         },
+
                     },
                     "interaction_kwargs": {
                         "query": question,

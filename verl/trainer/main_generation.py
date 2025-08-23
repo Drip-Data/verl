@@ -116,7 +116,17 @@ def main_task(config):
         position_ids = compute_position_id_with_mask(attention_mask)
         batch_dict = {"input_ids": input_ids, "attention_mask": attention_mask, "position_ids": position_ids}
 
-        data = DataProto.from_dict(batch_dict)
+       
+       # data = DataProto.from_dict(batch_dict)
+        # Create non_tensor_batch for multi-turn generation
+        non_tensor_batch = {}
+        
+        # Add raw_prompt if multi_turn is enabled or return_raw_chat is True
+        if config.rollout.get("multi_turn", {}).get("enable", False) or config.data.get("return_raw_chat", False):
+            # Convert chat messages to numpy array for DataProto
+            non_tensor_batch["raw_prompt"] = np.array(batch_chat_lst, dtype=object)
+
+        data = DataProto.from_dict(tensors=batch_dict, non_tensors=non_tensor_batch)
         data_padded, pad_size = pad_dataproto_to_divisor(data, wg.world_size)
 
         # START TO GENERATE FOR n_samples TIMES

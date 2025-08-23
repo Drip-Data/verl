@@ -1,8 +1,26 @@
 {
     "mcpServers": {
-        "Tavily Expert": {
-            "url": "your_tavily_expert_url",
-            "auth_token": "your_tavily_api_token"
+        "deepsearch_server": {
+            "command": "python",
+            "args": ["../agent-data-platform/mcp_servers/deepsearch_server/main.py"]
+        },
+        "browser-use": {
+            "command": "python",
+            "args": ["../agent-data-platform/mcp_servers/browser_use_server/server.py"]
+        },
+        "microsandbox_server": {
+            "url": "http://localhost:5555/mcp",
+            "headers": {},
+            "timeout": 30,
+            "sse_read_timeout": 300,
+            "terminate_on_close": true
+        },
+        "tavily": {
+            "command": "npx",
+            "args": ["-y", "tavily-mcp@latest"],
+            "env": {
+                "TAVILY_API_KEY": "${TAVILY_API_KEY}"
+            }
         }
     }
 }

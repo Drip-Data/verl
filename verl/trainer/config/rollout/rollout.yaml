@@ -129,13 +129,13 @@ multi_turn:
   _target_: verl.workers.config.MultiTurnConfig
 
   # set to True for multi-turn tool interaction tasks; should set rollout.name to sglang as well
-  enable: False
+  enable: True
 
   # null for no limit (default max_length // 3)
-  max_assistant_turns: null
+  max_assistant_turns: 8
 
   # null for no tool
-  tool_config_path: null
+  tool_config_path: /workspace/verl/verl/examples/sglang_multiturn/config/tool_config/mcp_tool_config.yaml
 
   # null for no limit (default max_length // 3)
   max_user_turns: null
@@ -144,7 +144,7 @@ multi_turn:
   max_parallel_calls: 1
 
   # max length of tool response
-  max_tool_response_length: 256
+  max_tool_response_length: 8000
 
   # truncate side of tool response: left, middle, right
   tool_response_truncate_side: middle

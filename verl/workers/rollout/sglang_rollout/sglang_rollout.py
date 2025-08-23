@@ -78,7 +78,7 @@ try:
     from sglang.srt.entrypoints.openai.protocol import Tool
 except ImportError:
     from sglang.srt.openai_api.protocol import Tool
-
+from omegaconf import DictConfig, OmegaConf
 
 logger = logging.getLogger(__file__)
 logger.setLevel(os.getenv("VERL_LOGGING_LEVEL", "WARN"))
@@ -288,6 +288,7 @@ class SGLangRollout(BaseRollout):
         """
         super().__init__()
         self.config = config
+
         self._device_mesh_cpu = device_mesh
         os.environ.setdefault("SGL_DISABLE_TP_MEMORY_INBALANCE_CHECK", "true")
 
@@ -326,6 +327,7 @@ class SGLangRollout(BaseRollout):
                 self.pad_token_id = self.processing_class.tokenizer.pad_token_id
             except AttributeError as e:
                 raise ValueError(f"Cannot get pad_token_id from processing_class {self.processing_class}") from e
+    
 
     def _init_distributed_env(self, device_mesh_cpu, **kwargs):
         self._device_mesh_cpu = device_mesh_cpu

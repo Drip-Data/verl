@@ -577,6 +577,8 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
 
             local_path = copy_to_local(self.config.model.path)
             log_gpu_memory_usage(f"Before building {rollout_name} rollout", logger=logger)
+            # Ensure rollout config is properly converted to DictConfig
+            rollout_config = OmegaConf.create(self.config.rollout) if isinstance(self.config.rollout, dict) else self.config.rollout
             rollout = SGLangRollout(
                 actor_module=local_path,
                 config=rollout_config,

@@ -34,7 +34,8 @@ class ToolType(Enum):
 
 
 async def initialize_mcp_tool(tool_cls, tool_config) -> list:
-    from verl.tools.utils.mcp_clients.McpClientManager import ClientManager
+    # from verl.tools.utils.mcp_clients.McpClientManager import ClientManager
+    from verl.tools.utils.mcp_clients.SimpleHttpClient import ClientManager
 
     tool_list = []
     mcp_servers_config_path = tool_config.mcp.mcp_servers_config_path

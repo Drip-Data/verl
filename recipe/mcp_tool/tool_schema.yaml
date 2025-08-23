@@ -1,0 +1,126 @@
+tools:
+  - type: "function"
+    function:
+      name: "deepsearch"
+      description: "Use the deepsearch_graph to answer the question."
+      parameters:
+        type: "object"
+        properties:
+          question:
+            type: "string"
+            title: "Question"
+        required: ["question"]
+
+  - type: "function"
+    function:
+      name: "sandbox_start"
+      description: "Start a new sandbox with specified configuration. This creates an isolated environment for code execution. IMPORTANT: Always stop the sandbox when done to prevent it from running indefinitely and consuming resources."
+      parameters:
+        type: "object"
+        properties:
+          namespace:
+            type: "string"
+            description: "Namespace for the sandbox"
+          sandbox:
+            type: "string"
+            description: "Name of the sandbox to start"
+        required: ["sandbox", "namespace"]
+
+  - type: "function"
+    function:
+      name: "sandbox_stop"
+      description: "Stop a running sandbox and clean up its resources. CRITICAL: Always call this when you're finished with a sandbox to prevent resource leaks and indefinite running. Failing to stop sandboxes will cause them to consume system resources unnecessarily."
+      parameters:
+        type: "object"
+        properties:
+          namespace:
+            type: "string"
+            description: "Namespace of the sandbox"
+          sandbox:
+            type: "string"
+            description: "Name of the sandbox to stop"
+        required: ["sandbox", "namespace"]
+
+  - type: "function"
+    function:
+      name: "sandbox_run_code"
+      description: "Execute code in a running sandbox. PREREQUISITES: The target sandbox must be started first using sandbox_start - this will fail if the sandbox is not running. TIMING: Code execution is synchronous and may take time depending on complexity. Long-running code will block until completion or timeout."
+      parameters:
+        type: "object"
+        properties:
+          code:
+            type: "string"
+            description: "Code to execute"
+          language:
+            type: "string"
+            description: "Programming language (e.g., 'python', 'nodejs')"
+          namespace:
+            type: "string"
+            description: "Namespace of the sandbox"
+          sandbox:
+            type: "string"
+            description: "Name of the sandbox (must be already started)"
+        required: ["sandbox", "namespace", "code", "language"]
+
+  - type: "function"
+    function:
+      name: "tavily-search"
+      description: "A powerful web search tool that provides comprehensive, real-time results using Tavily's AI search engine. Returns relevant web content with customizable parameters for result count, content type, and domain filtering. Ideal for gathering current information, news, and detailed web content analysis."
+      parameters:
+        type: "object"
+        properties:
+          query:
+            type: "string"
+            description: "Search query"
+          search_depth:
+            type: "string"
+            enum: ["basic", "advanced"]
+            description: "The depth of the search. It can be 'basic' or 'advanced'"
+            default: "basic"
+          topic:
+            type: "string"
+            enum: ["general", "news"]
+            description: "The category of the search. This will determine which of our agents will be used for the search"
+            default: "general"
+          days:
+            type: "number"
+            description: "The number of days back from the current date to include in the search results. Only available when using the 'news' search topic"
+            default: 3
+          time_range:
+            type: "string"
+            enum: ["day", "week", "month", "year", "d", "w", "m", "y"]
+            description: "The time range back from the current date to include in the search results"
+          start_date:
+            type: "string"
+            description: "Return results after this date (YYYY-MM-DD)"
+            default: ""
+          end_date:
+            type: "string"
+            description: "Return results before this date (YYYY-MM-DD)"
+            default: ""
+          max_results:
+            type: "number"
+            description: "Maximum number of search results to return"
+            default: 10
+            minimum: 5
+            maximum: 20
+        required: ["query"]
+
+  - type: "function"
+    function:
+      name: "tavily-extract"
+      description: "A powerful web content extraction tool that retrieves and processes raw content from specified URLs, ideal for data collection, content analysis, and research tasks."
+      parameters:
+        type: "object"
+        properties:
+          urls:
+            type: "array"
+            items:
+              type: "string"
+            description: "List of URLs to extract content from"
+          extract_depth:
+            type: "string"
+            enum: ["basic", "advanced"]
+            description: "Depth of extraction - 'basic' or 'advanced'. Use 'advanced' for LinkedIn or when explicitly told"
+            default: "basic"
+        required: ["urls"]

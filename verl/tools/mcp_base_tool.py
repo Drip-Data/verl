@@ -18,9 +18,9 @@ import os
 from typing import Any, Optional
 from uuid import uuid4
 
-# from fastmcp.exceptions import ClientError  # 不再使用 fastmcp
+from fastmcp.exceptions import ClientError
 
-from verl.tools.utils.mcp_clients.SimpleHttpClient import ClientManager
+from verl.tools.utils.mcp_clients.McpClientManager import ClientManager
 from verl.utils.rollout_trace import rollout_trace_op
 
 from .base_tool import BaseTool
@@ -65,23 +65,15 @@ class MCPBaseTool(BaseTool):
         err_msg = ""
         try:
             call_tool_result = await ClientManager.call_tool(self.name, parameters, self.timeout)
+        except ClientError as e:
+            err_msg = f"\n Tool call failed: {e}"
         except ConnectionError as e:
             err_msg = f"\n Connection failed: {e}"
-            call_tool_result = None
-        except TimeoutError as e:
-            err_msg = f"\n Tool call timed out: {e}"
-            call_tool_result = None
         except Exception as e:
             err_msg = f"\n An unexpected error occurred: {e}"
-            call_tool_result = None
 
-        if call_tool_result is not None:
-            logger.debug(f"Tool result for instance {instance_id} with tool {self.name}: {call_tool_result.content}")
-            result, metadata = self._parse_tool_result(call_tool_result.content)
-        else:
-            result = err_msg or "Tool call failed"
-            metadata = {}
-        
+        logger.debug(f"Tool result for instance {instance_id} with tool {self.name}: {call_tool_result.content}")
+        result, metadata = self._parse_tool_result(call_tool_result.content)
         metadata["api_request_error"] = None if not err_msg else err_msg
         return result, metadata
 

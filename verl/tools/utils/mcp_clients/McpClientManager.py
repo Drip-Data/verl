@@ -37,11 +37,6 @@ class MCPClientManager:
             return
         """Initialize the MCP Client Manager and start all clients"""
         result = self._load_config(config_path)
-        ### debug ###
-        print("debug")
-        print(result)
-        print("debug")
-        ### debug ##
         servers = result[self.rootServerName]
         exclude_sse_servers = {self.rootServerName: {}}
         for server_name in servers.keys():
